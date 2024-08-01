@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSE.Orders", "SSE.Orders\SSE.Orders.csproj", "{8D0BC90D-56AE-4380-8BC0-A165DD235295}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSE.Notification", "SSE.Notification\SSE.Notification.csproj", "{B53F7753-E1A9-409C-A2A8-BC1443086B9D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D0BC90D-56AE-4380-8BC0-A165DD235295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D0BC90D-56AE-4380-8BC0-A165DD235295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D0BC90D-56AE-4380-8BC0-A165DD235295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D0BC90D-56AE-4380-8BC0-A165DD235295}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B53F7753-E1A9-409C-A2A8-BC1443086B9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B53F7753-E1A9-409C-A2A8-BC1443086B9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B53F7753-E1A9-409C-A2A8-BC1443086B9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B53F7753-E1A9-409C-A2A8-BC1443086B9D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
