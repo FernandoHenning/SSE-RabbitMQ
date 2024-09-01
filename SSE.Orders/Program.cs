@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Http.HttpResults;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using SSE.Orders.Data;
+using SSE.Orders.Messaging;
 using SSE.Orders.Models;
 using SSE.Orders.Repository;
 
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<DatabaseInitializer>();
+builder.Services.AddSingleton<IMessageProducer, MessageProducer>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 var app = builder.Build();
@@ -26,7 +28,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection();  
 
 // GET /Orders - Retrieve all orders
 app.MapGet("/Orders", (IOrderRepository orderRepository) =>
@@ -36,9 +38,10 @@ app.MapGet("/Orders", (IOrderRepository orderRepository) =>
 });
 
 // POST /Orders - Create a new order
-app.MapPost("/Orders", (IOrderRepository orderRepository, [FromBody] CreateOrderDto newOrder) =>
+app.MapPost("/Orders", async (IOrderRepository orderRepository, IMessageProducer messageProducer, ILogger<Program> logger, [FromBody] CreateOrderDto newOrder) =>
 {
-    if (string.IsNullOrEmpty(newOrder.OrderNumber))
+    
+    if ( !Validator.TryValidateObject(newOrder, new ValidationContext(newOrder), null, true))
     {
         return Results.BadRequest("Invalid order data.");
     }
@@ -51,8 +54,19 @@ app.MapPost("/Orders", (IOrderRepository orderRepository, [FromBody] CreateOrder
         ShippingAddress = newOrder.ShippingAddress
     };
 
-    orderRepository.CreateOrder(order);
-    return Results.Created();
+    try
+    {
+        orderRepository.CreateOrder(order);
+        var message = $"Order {order.OrderNumber} created: {order.ProductDescription}";
+        await messageProducer.SendNewOrderMessageAsync(message);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError("{ErrorMessage}",ex.Message);
+        return Results.Text("Error creating the order.", statusCode: 500);
+    }
+    
+    return Results.Created($"/Orders/{order.OrderNumber}", order); 
 });
 
 
